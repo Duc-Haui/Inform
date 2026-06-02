@@ -126,12 +126,12 @@ def evaluate(name, metric, task):
         result['bias'] = calc_bias(name, metric, vanilla_result, fair_result)
 
     print(result)
-
+    
     # save to file
     with open('result/sc/{}/evaluation_{}.json'.format(task, metric), 'a') as f:
         json.dump(result, f, indent=4)
         f.write('\n')
-
+    return result
 
 # if __name__ == '__main__':
 #     evaluate(name='ppi', metric='jaccard', task='graph')

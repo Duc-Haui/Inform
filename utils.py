@@ -275,9 +275,9 @@ def train_val_test_split(A, test_frac=.1, val_frac=.05, prevent_disconnect=False
 
     # graph should not have diagonal values
     if is_directed:
-        G = nx.from_scipy_sparse_matrix(A, create_using=nx.DiGraph(), edge_attribute='weight')
+        G = nx.from_scipy_sparse_array(A, create_using=nx.DiGraph(), edge_attribute='weight')
     else:
-        G = nx.from_scipy_sparse_matrix(A, create_using=nx.Graph(), edge_attribute='weight')
+        G = nx.from_scipy_sparse_array(A, create_using=nx.Graph(), edge_attribute='weight')
     num_cc = nx.number_connected_components(G)
 
     A_triu = triu(A) # upper triangular portion of adj matrix

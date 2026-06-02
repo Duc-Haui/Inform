@@ -28,7 +28,7 @@ class DebiasModel:
         :param c: damping factor
         """
         mat = ((c / (1 + alpha)) * adj) + (((alpha) / (1 + alpha)) * sim)
-        graph = nx.from_scipy_sparse_matrix(mat, create_using=nx.Graph())
+        graph = nx.from_scipy_sparse_array(mat, create_using=nx.Graph())
         r = utils.revised_power_method(graph, c=c, alpha=alpha)
         return r
 
@@ -139,7 +139,7 @@ def alias_setup(probs):
     """
     K = len(probs)
     q = np.zeros(K)
-    J = np.zeros(K, dtype=np.int)
+    J = np.zeros(K, dtype=int)
 
     smaller = []
     larger = []

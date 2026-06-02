@@ -6,3 +6,59 @@
     "nmi": 0.8682420701208994,
     "bias": 0.19534454221269826
 }
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the input graph",
+    "diff": 1.0345048797521865,
+    "nmi": 0.9137902163453485,
+    "bias": 0.19534454221268327
+}
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the input graph",
+    "diff": 1.0345048797521865,
+    "nmi": 0.9137902163453485,
+    "bias": 0.19534454221268327
+}
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the input graph",
+    "diff": 1.0345048797521865,
+    "nmi": 0.9137902163453485,
+    "bias": 0.19534454221268327
+}
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the input graph",
+    "diff": 1.0345048797521668,
+    "nmi": 0.9137902163453485,
+    "bias": 0.1953445422126896
+}
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the input graph",
+    "diff": 1.0345048797521668,
+    "nmi": 0.9137902163453485,
+    "bias": 0.1953445422126896
+}
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the input graph",
+    "diff": 1.0345048797521668,
+    "nmi": 0.9137902163453485,
+    "bias": 0.1953445422126896
+}
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the input graph",
+    "diff": 1.0345048797521668,
+    "nmi": 0.9137902163453485,
+    "bias": 0.1953445422126896
+}

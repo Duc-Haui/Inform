@@ -6,3 +6,35 @@
     "nmi": 0.8524465277247899,
     "bias": 0.7750581491773365
 }
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the mining result",
+    "diff": 0.2418338751897767,
+    "nmi": 0.8346148936623693,
+    "bias": 0.7750581491773363
+}
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the mining result",
+    "diff": 0.2418338751897767,
+    "nmi": 0.8346148936623693,
+    "bias": 0.7750581491773363
+}
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the mining result",
+    "diff": 0.2418338751897767,
+    "nmi": 0.8346148936623693,
+    "bias": 0.7750581491773363
+}
+{
+    "dataset": "ppi",
+    "metric": "jaccard similarity",
+    "task": "debias the mining result",
+    "diff": 0.2418338751897767,
+    "nmi": 0.8346148936623693,
+    "bias": 0.7750581491773363
+}

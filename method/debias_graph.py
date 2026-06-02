@@ -5,7 +5,7 @@ import networkx as nx
 
 import torch
 import torch.nn as nn
-
+from tqdm import tqdm
 from scipy.sparse import csc_matrix, identity, diags
 from scipy.sparse.csgraph import laplacian
 from scipy.sparse.linalg import eigsh, svds
@@ -15,6 +15,7 @@ class DebiasGraph:
     """
     debiasing the input graph
     """
+
     def __init__(self):
         return
 
@@ -34,49 +35,55 @@ class DebiasGraph:
         :param tol: tolerance
         :return: debiased nx.Graph()
         """
+
         # helper function to calculate partial derivative
         def partial_grad(x, r, src, tgt):
             return 2 * alpha * c * x[src, 0] * r[tgt, 0]
 
-        graph = nx.from_scipy_sparse_matrix(init_adj, create_using=nx.Graph())
+        graph = nx.from_scipy_sparse_array(init_adj, create_using=nx.Graph())
         lap = laplacian(sim)
-        for niter in range(maxiter):
+        for niter in tqdm(range(maxiter), desc="Debiasing Graph"):
             # calc low-rank structure
             r = utils.power_method(graph, c=c, maxiter=maxiter)
             r = np.array([list(r.values())])
             r = csc_matrix(np.array(r).transpose())
             tele = lap @ r  # Ls dot r
-            vec = utils.reverse_power_method(graph, c=c, personalization=tele, maxiter=maxiter)
+            vec = utils.reverse_power_method(
+                graph, c=c, personalization=tele, maxiter=maxiter
+            )
             vec = np.array([list(vec.values())])
             vec = csc_matrix(np.array(vec).transpose())
 
             # iterate each edge to update gradient
             residual = 0
-            for (src, tgt) in graph.edges:
+            for src, tgt in graph.edges:
                 # src, tgt = e
                 if src != tgt:
-                    norm = 4 * (graph[src][tgt]['weight'] - init_adj[src, tgt])
-                    partial = partial_grad(vec, r, src, tgt) + \
-                              partial_grad(vec, r, tgt, src)
+                    norm = 4 * (graph[src][tgt]["weight"] - init_adj[src, tgt])
+                    partial = partial_grad(vec, r, src, tgt) + partial_grad(
+                        vec, r, tgt, src
+                    )
                     # grad = 4 * (graph[src][tgt]['weight'] - init_adj[src, tgt]) + \
                     #        partial_grad(vec, r, src, tgt) + \
                     #        partial_grad(vec, r, tgt, src)
                 else:
-                    norm = 2 * (graph[src][tgt]['weight'] - init_adj[src, tgt])
+                    norm = 2 * (graph[src][tgt]["weight"] - init_adj[src, tgt])
                     partial = partial_grad(vec, r, src, tgt)
                     # grad = 2 * (graph[src][tgt]['weight'] - init_adj[src, tgt]) + \
                     #        partial_grad(vec, r, src, tgt)
                 grad = norm + partial
-                if graph[src][tgt]['weight'] >= lr * grad:
-                    graph[src][tgt]['weight'] -= lr * grad
-                    residual += (grad ** 2)
+                if graph[src][tgt]["weight"] >= lr * grad:
+                    graph[src][tgt]["weight"] -= lr * grad
+                    residual += grad**2
 
             if np.sqrt(residual) < tol:
                 return graph
         return graph
 
     @staticmethod
-    def spectral_clustering(init_adj, sim, alpha, ncluster=10, v0=None, maxiter=100, lr=0.1, tol=1e-6):
+    def spectral_clustering(
+        init_adj, sim, alpha, ncluster=10, v0=None, maxiter=100, lr=0.1, tol=1e-6
+    ):
         """
         learning fair graph for spectral clustering
         :param init_adj: initial adjacency matrix
@@ -89,6 +96,7 @@ class DebiasGraph:
         :param tol: tolerance
         :return: debiased adjacency matrix
         """
+
         # helper function to calculate partial derivative
         def partial_grad(x, u, src, tgt):
             return 2 * alpha * (x[src, :] @ u[src, :] - x[src, :] @ u[tgt, :])
@@ -101,11 +109,11 @@ class DebiasGraph:
 
         nedges = adj.nnz
 
-        for niter in range(maxiter):
+        for niter in tqdm(range(maxiter), desc="Debiasing Graph"):
             try:
                 lap_adj = laplacian(adj)
                 lap_adj *= -1
-                v, u = eigsh(lap_adj, which='LM', k=ncluster, sigma=1.0, v0=v0)
+                v, u = eigsh(lap_adj, which="LM", k=ncluster, sigma=1.0, v0=v0)
             except:
                 return None
             x = u.copy()
@@ -133,8 +141,9 @@ class DebiasGraph:
                     continue
                 if src != tgt:
                     norm = 4 * (adj[src, tgt] - init_adj[src, tgt])
-                    partial = partial_grad(x, u, src, tgt) + \
-                              partial_grad(x, u, tgt, src)
+                    partial = partial_grad(x, u, src, tgt) + partial_grad(
+                        x, u, tgt, src
+                    )
                     # grad = 4 * (adj[src, tgt] - init_adj[src, tgt]) + \
                     #        partial_grad(x, u, src, tgt, alpha) + \
                     #        partial_grad(x, u, tgt, src, alpha)
@@ -146,10 +155,10 @@ class DebiasGraph:
                 grad = norm + partial
                 if adj[src, tgt] >= lr * grad:
                     adj[src, tgt] -= lr * grad
-                    residual += (grad ** 2)
+                    residual += grad**2
                     if src != tgt:
                         adj[tgt, src] -= lr * grad
-                        residual += (grad ** 2)
+                        residual += grad**2
 
             if np.sqrt(residual) < tol:
                 return adj
@@ -167,6 +176,7 @@ class DebiasGraph:
         :param tol: tolerance
         :return: debiased adjacency matrix
         """
+
         # helper function to calculate partial derivative
         def partial_grad(adj, lap, vec, src, tgt):
             first = lap[src, tgt] / (adj[src, tgt] + adj[tgt, src])  # f(A+A') * LS
@@ -183,7 +193,9 @@ class DebiasGraph:
         lap = lap.tocsc()
 
         nsims, nedges = lap.nnz, adj.nnz
-        for niter in range(maxiter):
+        for niter in tqdm(range(maxiter), desc='Debiasing Graph (LINE)'):
+
+        # for niter in range(maxiter):
             # calculate first column of diag(BLs)1, which is diag(BLs)
             vec = np.asarray([0.0] * init_adj.shape[0])  # vec = diag(BLs)
             d = adj.sum(axis=1).T
@@ -214,8 +226,9 @@ class DebiasGraph:
                     continue
                 if src != tgt:
                     norm = 4 * (adj[src, tgt] - init_adj[src, tgt])
-                    partial = partial_grad(adj, lap, vec, src, tgt) + \
-                              partial_grad(adj, lap, vec, tgt, src)
+                    partial = partial_grad(adj, lap, vec, src, tgt) + partial_grad(
+                        adj, lap, vec, tgt, src
+                    )
                 else:
                     norm = 2 * (adj[src, tgt] - init_adj[src, tgt])
                     partial = partial_grad(adj, lap, vec, src, tgt)
@@ -223,10 +236,10 @@ class DebiasGraph:
 
                 if adj[src, tgt] >= lr * grad:
                     adj[src, tgt] -= lr * grad
-                    residual += (grad ** 2)
+                    residual += grad**2
                     if src != tgt:
                         adj[tgt, src] -= lr * grad
-                        residual += (grad ** 2)
+                        residual += grad**2
 
             if np.sqrt(residual) < tol:
                 return adj

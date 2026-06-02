@@ -8,11 +8,10 @@ import networkx as nx
 
 from scipy.sparse.csgraph import laplacian
 
-
 task_lookup = {
-    'graph': 'debias the input graph',
-    'model': 'debias the mining model',
-    'result': 'debias the mining result'
+    "graph": "debias the input graph",
+    "model": "debias the mining model",
+    "result": "debias the mining result",
 }
 
 
@@ -65,7 +64,7 @@ def calc_single_dcg(rel, pos):
     :param pos: ranking of this node
     :return: DCG of this node
     """
-    numerator = (2 ** rel) - 1
+    numerator = (2**rel) - 1
     denominator = np.log(1 + pos)
     return numerator / denominator
 
@@ -95,23 +94,25 @@ def calc_bias(name, metric, vanilla_result, fair_result):
     :return: bias reduction
     """
     # load graph
-    if name == 'ppi':
+    if name == "ppi":
         data = load_graph.read_mat(name)
-        adj = data['adjacency']
+        adj = data["adjacency"]
     else:
         graph = load_graph.read_graph(name)
-        adj = nx.to_scipy_sparse_matrix(graph, dtype='float', format='csc')
+        adj = nx.to_scipy_sparse_matrix(graph, dtype="float", format="csc")
     adj = utils.symmetric_normalize(adj)
 
     # build similarity matrix
-    sim = utils.filter_similarity_matrix(utils.get_similarity_matrix(adj, metric=metric), sigma=0.75)
+    sim = utils.filter_similarity_matrix(
+        utils.get_similarity_matrix(adj, metric=metric), sigma=0.75
+    )
     sim = utils.symmetric_normalize(sim)
     lap = laplacian(sim)
 
     # calculate bias
     vanilla_bias = utils.trace(vanilla_result.T @ lap @ vanilla_result)
     fair_bias = utils.trace(fair_result.T @ lap @ fair_result)
-    reduction = 1 - (fair_bias/vanilla_bias)
+    reduction = 1 - (fair_bias / vanilla_bias)
     return reduction
 
 
@@ -126,42 +127,49 @@ def evaluate(name, metric, task):
     result = dict()
 
     # load vanilla result
-    with open('result/pagerank/vanilla.pickle', 'rb') as f:
+    with open("result/pagerank/vanilla.pickle", "rb") as f:
         vanilla = pickle.load(f)
 
     # load fair result
-    with open('result/pagerank/{}/{}.pickle'.format(task, metric), 'rb') as f:
+    with open("result/pagerank/{}/{}.pickle".format(task, metric), "rb") as f:
         fair = pickle.load(f)
 
     # get vanilla and fair results
-    vanilla_result = np.asarray(vanilla[name].todense()).flatten()  # vanilla result, flatten to np.array
-    fair_result = np.asarray(fair[name].todense()).flatten()  # fair result, flatten to np.array
+    vanilla_result = np.asarray(
+        vanilla[name].todense()
+    ).flatten()  # vanilla result, flatten to np.array
+    fair_result = np.asarray(
+        fair[name].todense()
+    ).flatten()  # fair result, flatten to np.array
 
     # evaluate
-    result['dataset'] = name
-    result['metric'] = '{} similarity'.format(metric)
-    result['task'] = task_lookup[task]
-    result['diff'] = lp_diff(vanilla_result, fair_result, ord=2) / np.linalg.norm(vanilla_result, ord=2)
-    result['kl'] = kl_divergence(vanilla_result, fair_result)
-    result['precision'] = dict()
-    result['ndcg'] = dict()
+    result["dataset"] = name
+    result["metric"] = "{} similarity".format(metric)
+    result["task"] = task_lookup[task]
+    result["diff"] = lp_diff(vanilla_result, fair_result, ord=2) / np.linalg.norm(
+        vanilla_result, ord=2
+    )
+    result["kl"] = kl_divergence(vanilla_result, fair_result)
+    result["precision"] = dict()
+    result["ndcg"] = dict()
 
     k = 50
     vanilla_topk = np.argsort(vanilla_result)[-k:][::-1]
     fair_topk = np.argsort(fair_result)[-k:][::-1]
-    result['precision'][k] = precision_at_k(vanilla_topk, fair_topk)
-    result['ndcg'][k] = ndcg_at_k(vanilla_topk, fair_topk)
+    result["precision"][k] = precision_at_k(vanilla_topk, fair_topk)
+    result["ndcg"][k] = ndcg_at_k(vanilla_topk, fair_topk)
 
-    result['bias'] = calc_bias(name, metric, vanilla[name], fair[name])
+    result["bias"] = calc_bias(name, metric, vanilla[name], fair[name])
 
     print(result)
+    
 
     # save to file
-    with open('result/pagerank/{}/evaluation_{}.json'.format(task, metric), 'a') as f:
+    with open("result/pagerank/{}/evaluation_{}.json".format(task, metric), "a") as f:
         json.dump(result, f, indent=4)
-        f.write('\n')
+        f.write("\n")
 
-
+    return result
 # if __name__ == '__main__':
 #     evaluate(name='ppi', metric='jaccard', task='graph')
 #     evaluate(name='ppi', metric='cosine', task='graph')

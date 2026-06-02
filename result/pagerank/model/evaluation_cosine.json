@@ -12,3 +12,45 @@
     },
     "bias": 0.674944673637444
 }
+{
+    "dataset": "ppi",
+    "metric": "cosine similarity",
+    "task": "debias the mining model",
+    "diff": 0.27991281773296933,
+    "kl": 0.00956437934504764,
+    "precision": {
+        "50": 0.9
+    },
+    "ndcg": {
+        "50": 0.9283320973565875
+    },
+    "bias": 0.674944673637444
+}
+{
+    "dataset": "ppi",
+    "metric": "cosine similarity",
+    "task": "debias the mining model",
+    "diff": 0.27991281773296933,
+    "kl": 0.00956437934504764,
+    "precision": {
+        "50": 0.9
+    },
+    "ndcg": {
+        "50": 0.9283320973565875
+    },
+    "bias": 0.674944673637444
+}
+{
+    "dataset": "ppi",
+    "metric": "cosine similarity",
+    "task": "debias the mining model",
+    "diff": 0.27991281773296933,
+    "kl": 0.00956437934504764,
+    "precision": {
+        "50": 0.9
+    },
+    "ndcg": {
+        "50": 0.9283320973565875
+    },
+    "bias": 0.674944673637444
+}
