@@ -149,12 +149,19 @@ def evaluate(name, metric, task):
     # scores
     result = dict()
 
-    # load vanilla result
-    with open('result/line/vanilla.pickle', 'rb') as f:
+    # # load vanilla result
+    # with open('result/line/vanilla.pickle', 'rb') as f:
+    #     vanilla = pickle.load(f)
+
+    # # load fair result
+    # with open('result/line/{}/{}.pickle'.format(task, metric), 'rb') as f:
+    #     fair = pickle.load(f)
+
+    # Đọc linh động theo tên dataset
+    with open(f'result/line/{name}/vanilla.pickle', 'rb') as f:
         vanilla = pickle.load(f)
 
-    # load fair result
-    with open('result/line/{}/{}.pickle'.format(task, metric), 'rb') as f:
+    with open(f'result/line/{name}/{task}/{metric}.pickle', 'rb') as f:
         fair = pickle.load(f)
 
     # load link prediction data
@@ -178,7 +185,10 @@ def evaluate(name, metric, task):
     print(result)
     
     # save to file
-    with open('result/line/{}/evaluation_{}.json'.format(task, metric), 'a') as f:
+    # with open('result/line/{}/evaluation_{}.json'.format(task, metric), 'a') as f:
+    #     json.dump(result, f, indent=4)
+    # Ghi linh động vào đúng nhà của dataset
+    with open(f'result/line/{name}/{task}/evaluation_{metric}.json', 'a') as f:
         json.dump(result, f, indent=4)
         f.write('\n')
 
