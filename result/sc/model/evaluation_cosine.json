@@ -38,3 +38,19 @@
     "nmi": 0.6669405716467854,
     "bias": 0.7522006156266914
 }
+{
+    "dataset": "Facebook",
+    "metric": "cosine similarity",
+    "task": "debias the mining model",
+    "diff": 0.8966341141013505,
+    "nmi": 0.8095272275179479,
+    "bias": 0.3794881938378254
+}
+{
+    "dataset": "Facebook",
+    "metric": "cosine similarity",
+    "task": "debias the mining model",
+    "diff": 0.8966341141013505,
+    "nmi": 0.8095272275179479,
+    "bias": 0.3794881938378254
+}

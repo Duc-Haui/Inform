@@ -38,3 +38,19 @@
     "nmi": 0.8346148936623693,
     "bias": 0.7750581491773363
 }
+{
+    "dataset": "Facebook",
+    "metric": "jaccard similarity",
+    "task": "debias the mining result",
+    "diff": 0.05579354541695825,
+    "nmi": 0.9943068015743661,
+    "bias": 0.2477678169136106
+}
+{
+    "dataset": "Facebook",
+    "metric": "jaccard similarity",
+    "task": "debias the mining result",
+    "diff": 0.05579354541695825,
+    "nmi": 0.9943068015743661,
+    "bias": 0.2477678169136106
+}

@@ -38,3 +38,19 @@
     "nmi": 0.9137902163453485,
     "bias": 0.24145779363833375
 }
+{
+    "dataset": "Facebook",
+    "metric": "cosine similarity",
+    "task": "debias the input graph",
+    "diff": 0.03646426798981116,
+    "nmi": 1.0,
+    "bias": -0.0020435288617386416
+}
+{
+    "dataset": "Facebook",
+    "metric": "cosine similarity",
+    "task": "debias the input graph",
+    "diff": 0.03646426798981116,
+    "nmi": 1.0,
+    "bias": -0.0020435288617386416
+}
