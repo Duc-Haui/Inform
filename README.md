@@ -1,44 +1,22 @@
 # InFoRM: Individual Fairness on Graph Mining
+Dự án này thực hiện các thuật toán khử thiên vị trên đồ thị dựa trên nghiên cứu InFoRM (KDD 2020).
 
-This is a Python implementation of InFoRM: Individual Fairness on Graph Mining for the task of PageRank, spectral clustering and LINE, as described in our paper:
- 
-Jian Kang, Jingrui He, Ross Maciejewski, Hanghang Tong. [InFoRM: Individual Fairness on Graph Mining](http://jiank2.web.illinois.edu/files/kdd20/kang20inform.pdf). In Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pp. 379-389. 2020 (KDD 2020).
+## 1. Cài đặt
+1. Tạo môi trường ảo: `conda create -n inform_env python=3.9`
+2. Cài đặt thư viện: `pip install -r requirements.txt`
 
-## Requirements
-* python 3 (>3.7)
-* numpy
-* scipy
-* sklearn
-* networkx
+## 2. Cách chạy thực nghiệm
+- Bước 1: Chạy các notebook trong thư mục `notebooks/` theo thứ tự:
+  1. `demo_LINE.ipynb`
+  2. `demo_PageRank.ipynb`
+  3. `demo_spectral_clustering.ipynb`
+- Bước 2: Dữ liệu kết quả sẽ được lưu tự động vào `results/`.
 
-## Data
+## 3. Cấu trúc mã nguồn
+- `methods/`: Chứa 3 chiến lược can thiệp (Debias Graph, Model, Result).
+- `load_graph.py`: Xử lý việc nạp dữ liệu.
 
-We provide data used in the paper in `data` folder. Have a look at the `load_graph.py` for your reference.
 
-In the demos, we load PPI dataset.
 
-## Models
 
-We provide three mutually exclusive debiasing method in `method` folder: 
-* `debias_graph.py`: Debiasing the input graph. Feel free to override `__init__()` and `fit()` functions to debias your own method.
-* `debias_model.py`: Debiasing the mining model. Feel free to override `__init__()` and `fit()` functions to debias your own method.
-* `debias_result.py`: Debiasing the mining results.
 
-## Demos
-
-Please check our demos in `demo_{#1}.ipynb` where `{#1}` can be PageRank, spectral_clustering or LINE.
-
-## Reference
-
-Please cite our paper if you use this code in your own work:
-
-```
-@inproceedings{kang2020inform,
-  title={InFoRM: Individual Fairness on Graph Mining},
-  author={Kang, Jian and He, Jingrui and Maciejewski, Ross and Tong, Hanghang},
-  booktitle={Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
-  pages={379–389},
-  year={2020},
-  organization={ACM}
-}
-```
